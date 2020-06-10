@@ -29,50 +29,41 @@ namespace GraphAlgorithms
                 forest.Add(new List<Vertex>() { item });
             }
 
-            //Step 2: remove unneccessary edges
+            //Remove unneccessary edges
             foreach (Edge edge in graph.edges)
             {
-                //if one of the vertices is not visited we can safely add this edge
-                if (!edge.vertex.visited || !edge.connectedVertex.visited)
-                {
-                    edge.vertex.visited = true;
-                    edge.connectedVertex.visited = true;
+                //Find the trees that contain these vertices
+                int vertexIndex = FindVertexIndex(forest, edge.vertex);
+                int connectedVertexIndex = FindVertexIndex(forest, edge.connectedVertex);
 
+                //If indexes are different that means they are in different trees and we can safely add this edge to combine them
+                if (vertexIndex != connectedVertexIndex)
+                {
+                    //Combine the trees
+                    forest[vertexIndex].AddRange(forest[connectedVertexIndex]);
+
+                    //Remove the unneccessary tree
+                    forest.RemoveAt(connectedVertexIndex);
+
+                    //Add edge to the list
                     edgeList.Add(edge);
 
-                    //find the trees that contain these vertices
-                    int vertexIndex = FindVertexIndex(forest, edge.vertex);
-                    int connectedVertexIndex = FindVertexIndex(forest, edge.connectedVertex);
-                    //combine
-                    forest[vertexIndex].AddRange(forest[connectedVertexIndex]);
-                    //remove the unneccessary tree
-                    forest.RemoveAt(connectedVertexIndex);
-                }
-                else
-                {
-                    int vertexIndex = FindVertexIndex(forest, edge.vertex);
-                    int connectedVertexIndex = FindVertexIndex(forest, edge.connectedVertex);
-
-                    //if indexes are different that means they are in different trees and we can safely add this edge to combine them
-                    if (vertexIndex != connectedVertexIndex)
-                    {
-                        edgeList.Add(edge);
-                        forest[vertexIndex].AddRange(forest[connectedVertexIndex]);
-                        forest.RemoveAt(connectedVertexIndex);
-                    }
+                    edge.vertex.visited = true;
+                    edge.connectedVertex.visited = true;
                 }
             }
 
             return edgeList;
         }
 
-        //Step 2 alternative: edge removel with adjacency matrix
+        //Step 2 alternative: edge removal with adjacency matrix
         public List<Edge> EdgeRemovalAdjMatrix(Graph graph)
         {
             List<Edge> edgeList = new List<Edge>();
 
             byte[,] adjacencyMatrix = new byte[graph.vertices.Count, graph.vertices.Count];
-            //Step 2: remove unneccessary edges
+
+            //Remove unneccessary edges
             foreach (Edge edge in graph.edges)
             {
                 //If one side of the edge is not visited take the edge or if edge connects two seperate trees

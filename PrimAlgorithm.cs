@@ -27,22 +27,22 @@ namespace GraphAlgorithms
                 //add found edges to the available ones
                 availableEdges.AddRange(currentVertexEdges);
 
-                //find minimum from available edges
                 if (availableEdges.Count == 0)
                     break;
+                //Find minimum from available edges
                 Edge selectedEdge = availableEdges.FindAll(x => !x.vertex.visited || !x.connectedVertex.visited).Aggregate((x, y) => x.distance <= y.distance ? x : y);
 
-                //remove selected edge from available edges
+                //Remove selected edge from available edges
                 availableEdges.Remove(selectedEdge);
 
-                //add the edge to the list
+                //Add the edge to the list
                 edgeList.Add(selectedEdge);
 
-                //change currentVertex to not visited one from the selected edge
+                //Change currentVertex to not visited one from the selected edge
                 currentVertex = selectedEdge.vertex.visited ? selectedEdge.connectedVertex : selectedEdge.vertex;
                 currentVertex.visited = true;
 
-                //if all vertices are visited finish loop
+                //If all vertices are visited finish loop
                 loopSwitch = false;
                 foreach (Vertex item in graph.vertices)
                 {

@@ -60,7 +60,7 @@ namespace GraphAlgorithms
 
                 if (vertexDistance[src] + edgeWeight < vertexDistance[dst])
                 {
-                    Console.WriteLine("Graph Contains negative weight cycle");
+                    Console.WriteLine("Graph contains negative weight cycle");
                 }
 
                 if (graph.undirected)
@@ -70,7 +70,7 @@ namespace GraphAlgorithms
 
                     if (vertexDistance[src] + edgeWeight < vertexDistance[dst])
                     {
-                        Console.WriteLine("Graph Contains negative weight cycle");
+                        Console.WriteLine("Graph contains negative weight cycle");
                     }
                 }
             }
